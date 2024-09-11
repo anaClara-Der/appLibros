@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956611615168",
+    "project_id": "app-libros-4e0d4",
+    "storage_bucket": "app-libros-4e0d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956611615168:android:ff53ec396abe5639109025",
+        "android_client_info": {
+          "package_name": "com.example.libros"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZKuCVBhbgRezZIEgkQZEYij8q-k4i8Bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
