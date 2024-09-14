@@ -1,13 +1,13 @@
-package com.example.libros
+package com.example.libros.ui.activity
 
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import com.example.libros.fragments.loginFragment
-import com.example.libros.fragments.signUpFragment
+import com.example.libros.R
+import com.example.libros.ui.fragments.loginFragment
+import com.example.libros.ui.fragments.signUpFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,10 +18,7 @@ class MainActivity : AppCompatActivity() {
 
        val btnLogin = findViewById<Button>(R.id.btnLogin)
         val btnSingUp = findViewById<Button>(R.id.btnSignUp)
-        /*supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            add<loginFragment>(R.id.containerFragment)
-        }*/
+
 
         //Se carga por defecto el login
         supportFragmentManager.commit {

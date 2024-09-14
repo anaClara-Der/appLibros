@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.signUpFragment"
+    tools:context=".ui.fragments.signUpFragment"
     >
 
     <LinearLayout
@@ -16,40 +16,30 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <!--Email-->
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:textSize="16sp" />
+
 
         <EditText
             android:id="@+id/logEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:hint="ejemplo@mail.com"
-            android:layout_marginBottom="30dp"
+            android:hint="Email"
+            android:layout_marginBottom="40dp"
             android:drawableEnd="@drawable/ic_done"
             android:minHeight="48dp"
             android:drawablePadding="8dp"
 
             />
         <!--Password-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Password"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"/>
+
 
         <EditText
             android:id="@+id/logPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="**************"
-
-            android:layout_marginBottom="20dp"
+            android:hint="Contraseña"
+            android:layout_marginBottom="30dp"
             android:minHeight="48dp"
             />
 

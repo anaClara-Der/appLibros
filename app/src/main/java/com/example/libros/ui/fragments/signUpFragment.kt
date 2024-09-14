@@ -1,4 +1,4 @@
-package com.example.libros.fragments
+package com.example.libros.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.libros.R
-import com.example.libros.HomeActivity
+import com.example.libros.ui.activity.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

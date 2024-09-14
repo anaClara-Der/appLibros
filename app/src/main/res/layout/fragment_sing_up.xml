@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.signUpFragment"
+    tools:context=".ui.fragments.signUpFragment"
     >
 
     <LinearLayout
@@ -17,34 +17,25 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <!--Nombre-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nombre"
-            android:textSize="16dp" />
+
 
         <EditText
             android:id="@+id/signName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Ana"
+            android:hint="Nombre de usuario"
             android:layout_marginBottom="30dp"
             android:minHeight="48dp"
             />
         <!--Email-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:textSize="16dp" />
 
         <EditText
             android:id="@+id/signEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:hint="ejemplo@mail.com"
+            android:hint="Email"
             android:layout_marginBottom="30dp"
             android:drawableEnd="@drawable/ic_done"
             android:minHeight="48dp"
@@ -52,19 +43,14 @@
 
             />
         <!--Password-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Password"
-            android:textSize="16dp"
-            />
+
 
         <EditText
             android:id="@+id/signPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="**************"
+            android:hint="Contraseña"
             android:layout_marginBottom="20dp"
             android:minHeight="48dp"
             />
