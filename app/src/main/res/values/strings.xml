@@ -6,6 +6,6 @@
     <!-- Array de calificaciones -->
     <string-array name="state_array">
         <item>Leído</item>
-        <item>No leído</item>
+        <item>Por leer</item>
     </string-array>
 </resources>

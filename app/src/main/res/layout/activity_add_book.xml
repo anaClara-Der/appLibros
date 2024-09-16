@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.AddBookActivity"
-    android:padding="20dp">
+    android:padding="25dp">
 
     <!--Cabecera con título, cerrar y guardar-->
     <ImageView
@@ -60,9 +60,7 @@
         <!--Container para acomodar la imagen y el ícono-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
+            android:layout_height="match_parent">
             <ImageView
                 android:id="@+id/bookImage"
                 android:layout_width="match_parent"
@@ -85,8 +83,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
-
-
+    <!--Agregar título, autor/a, estado y reseña-->
     <EditText
         android:id="@+id/addTitle"
         android:layout_width="wrap_content"
@@ -128,8 +125,7 @@
         app:layout_constraintStart_toEndOf="@+id/textState"
         tools:layout_editor_absoluteX="20dp"
         android:padding="10dp"
-        android:layout_marginTop="20dp"
-        />
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:id="@+id/textReview"
@@ -157,15 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="Mi reseña..."
-            android:textSize="20sp"
-            />
+            android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
