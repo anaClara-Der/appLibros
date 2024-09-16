@@ -8,14 +8,16 @@
     tools:context=".ui.activity.AddBookActivity"
     android:padding="20dp">
 
-
+    <!--Cabecera con título, cerrar y guardar-->
     <ImageView
-        android:id="@+id/add"
+        android:id="@+id/clouse"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_done"
+        android:src="@drawable/ic_clouse"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        app:tint="@color/red" />
 
     <TextView
         android:id="@+id/titleAddBook"
@@ -23,33 +25,67 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Añadir libro"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@id/add"
-        app:layout_constraintEnd_toStartOf="@id/clouse"
+        app:layout_constraintStart_toEndOf="@id/clouse"
+        app:layout_constraintEnd_toStartOf="@id/add"
         app:layout_constraintTop_toTopOf="parent"
-
         />
 
     <ImageView
-        android:id="@+id/clouse"
+        android:id="@+id/add"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_clouse"
+        android:src="@drawable/ic_done"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"/>
 
-
-    <ImageView
-        android:id="@+id/addImg"
+    <!--Card con la imagen y el ícono de borrar-->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardImg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/portada_libro"
+        app:cardElevation="0dp"
+        app:cardUseCompatPadding="true"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.30"
+        app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleAddBook"
-        app:layout_constraintWidth_percent="1" />
+        app:layout_constraintWidth_percent="0.6"
+        android:background="@color/white">
+
+        <!--Container para acomodar la imagen y el ícono-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <ImageView
+                android:id="@+id/bookImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/upload_img"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/red"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"></ImageView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
 
     <EditText
         android:id="@+id/addTitle"
@@ -57,7 +93,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addImg"
+        app:layout_constraintTop_toBottomOf="@+id/cardImg"
         android:hint="Título"
         android:gravity="center"
         android:textSize="25sp"/>
@@ -105,18 +141,28 @@
         android:layout_marginTop="20dp"
         android:textSize="20sp"></TextView>
 
-    <EditText
-        android:id="@+id/addReview"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/addReviewMaterial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:hint="Reseña"
-        android:textSize="20sp"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textReview">
 
-    </EditText>
+        <EditText
+            android:id="@+id/addReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Mi reseña..."
+            android:textSize="20sp"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
 
 

@@ -18,7 +18,7 @@ class AddBookActivity : AppCompatActivity() {
         ratingSpinner()
     }
 
-    //Agregar estados al spinner
+    //Agregar estados al spinner. Leído o no leído
     private fun ratingSpinner(){
         val ratingSpinner = findViewById<Spinner>(R.id.spinnerState)
 
@@ -27,7 +27,7 @@ class AddBookActivity : AppCompatActivity() {
             R.array.state_array,
             android.R.layout.simple_spinner_item
         )
-        // Siempre aparece ese item
+        // Por defecto se muestra el mismo.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         ratingSpinner.adapter = adapter
     }

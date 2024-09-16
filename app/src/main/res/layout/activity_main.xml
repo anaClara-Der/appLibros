@@ -15,7 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitCenter"
-        android:src="@mipmap/portada_libro"
+        android:src="@drawable/portada"
         app:layout_constraintWidth_percent="1"
         app:layout_constraintHeight_percent="0.30"
         app:layout_constraintTop_toTopOf="parent"
