@@ -20,13 +20,14 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
         private const val COLUM_AUTHOR = "author"
         private const val COLUM_STATE = "state"
         private const val COLUM_REVIEW = "review"
+        private const val COLUM_USER_ID = "userId"
 
     }
 
     //Se crea la tabla en la base de datos
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableQuery =
-            "CREATE TABLE $TABLE_NAME ($COLUM_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUM_TITLE TEXT, $COLUM_AUTHOR TEXT, $COLUM_STATE INTEGER, $COLUM_REVIEW TEXT)"
+            "CREATE TABLE $TABLE_NAME ($COLUM_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUM_TITLE TEXT, $COLUM_AUTHOR TEXT, $COLUM_STATE INTEGER, $COLUM_REVIEW TEXT, $COLUM_USER_ID TEXT)"
         db?.execSQL(createTableQuery)
     }
     //se manejan las actualizaciones en la base de datos
@@ -47,9 +48,37 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
             put(COLUM_AUTHOR, book.author)
             put(COLUM_STATE,  if (book.state) 1 else 0)
             put(COLUM_REVIEW, book.review)
-
+            put(COLUM_USER_ID, book.userId)
         }
         db.insert(TABLE_NAME, null, values)
         db.close()
+    }
+
+    // Método para obtener libros por userId
+
+    fun getBooksByUser(userId: String): List<Book> {
+        val books = mutableListOf<Book>()
+        val db = readableDatabase
+        val cursor = db.query(
+            TABLE_NAME,
+            null,
+            "$COLUM_USER_ID = ?", arrayOf(userId),
+            null,
+            null,
+            null
+        )
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUM_ID))
+            val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUM_TITLE))
+            val author = cursor.getString(cursor.getColumnIndexOrThrow(COLUM_AUTHOR))
+            val state = cursor.getInt(cursor.getColumnIndexOrThrow(COLUM_STATE)) == 1
+            val review = cursor.getString(cursor.getColumnIndexOrThrow(COLUM_REVIEW))
+            val userId = cursor.getString(cursor.getColumnIndexOrThrow(COLUM_USER_ID))
+
+            books.add(Book(id, title, author, state, review, userId))
+        }
+        cursor.close()
+        db.close()
+        return books
     }
 }

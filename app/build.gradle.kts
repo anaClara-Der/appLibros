@@ -43,7 +43,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
     implementation (libs.firebase.auth)
     implementation(libs.firebase.firestore)
-
+    implementation(libs.imagePicker)
     implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

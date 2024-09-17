@@ -7,5 +7,6 @@ data class Book (
     val title: String,
     val author: String,
     val state:Boolean,
-    val review:String
+    val review:String,
+    val userId: String
     )

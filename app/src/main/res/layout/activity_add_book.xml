@@ -9,58 +9,74 @@
     android:padding="25dp">
 
     <!--Cabecera con título, cerrar y guardar-->
-    <ImageView
-        android:id="@+id/clouse"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_clouse"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="20dp"
-        app:tint="@color/red" />
 
-    <TextView
-        android:id="@+id/titleAddBook"
-        android:layout_width="wrap_content"
+
+
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Añadir libro"
-        android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@id/clouse"
-        app:layout_constraintEnd_toStartOf="@id/add"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <ImageView
-        android:id="@+id/add"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_done"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="20dp"/>
+        android:orientation="horizontal">
 
-    <!--Card con la imagen y el ícono de borrar-->
+        <ImageView
+            android:id="@+id/clouse"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_clouse"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            />
+
+
+        <TextView
+            android:id="@+id/titleAddBook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Añadir libro"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_weight="2" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/brown"
+            android:textColor="@color/white"
+            android:text="Guardar"
+            android:textSize="14sp"
+            app:cornerRadius="16dp"
+            android:layout_gravity="end"
+            />
+    </LinearLayout>
+
+
+    <!--Card con la imagen-->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardImg"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cardElevation="0dp"
         app:cardUseCompatPadding="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleAddBook"
-        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintTop_toBottomOf="@+id/headerLayout"
+        app:layout_constraintWidth_percent="0.5"
         android:background="@color/white">
 
         <!--Container para acomodar la imagen y el ícono-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
             <ImageView
                 android:id="@+id/bookImage"
                 android:layout_width="match_parent"
@@ -73,13 +89,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"></ImageView>
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@color/red"
-                android:src="@drawable/ic_delete"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"></ImageView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

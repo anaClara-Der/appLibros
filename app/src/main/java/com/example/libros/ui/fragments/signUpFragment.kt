@@ -13,18 +13,16 @@ import androidx.fragment.app.Fragment
 import com.example.libros.R
 import com.example.libros.ui.activity.HomeActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.UserProfileChangeRequest
 
 class signUpFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Inicializar Firebase Auth y Firestore
+        // Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
     }
 
     override fun onCreateView(
@@ -52,30 +50,30 @@ class signUpFragment : Fragment() {
                             val user = auth.currentUser
                             Log.d("Firebase", "User registered: ${user?.email}")
 
-                            // Crear la colección de libros vacía en Firestore para este usuario
-                            val userId = user?.uid
-                            val userBooksRef = db.collection("users").document(userId!!).collection("libros")
+                            // Actualizar el perfil del usuario con el nombre
+                            val profileUpdates = UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build()
 
-                            // Inicializar la colección sin libros
-                            userBooksRef.document().set(emptyMap<String, Any>())
-                                .addOnSuccessListener {
-                                    Log.d("Firebase", "Colección de libros creada para el usuario: $userId")
+                            user?.updateProfile(profileUpdates)
+                                ?.addOnCompleteListener { profileUpdateTask ->
+                                    if (profileUpdateTask.isSuccessful) {
+                                        Log.d("Firebase", "User profile updated.")
+                                        // Redirigir a la HomeActivity
+                                        val intent = Intent(activity, HomeActivity::class.java)
+                                        startActivity(intent)
+                                        activity?.finish() // Opcional: Finalizar la actividad actual para que no se pueda volver atrás
 
-                                    // Redirigir a la HomeActivity
-                                    val intent = Intent(activity, HomeActivity::class.java)
-                                    startActivity(intent)
-                                    activity?.finish() // Opcional: Finalizar la actividad actual para que no se pueda volver atrás
+                                        Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Log.w("Firebase", "Error en la actualización del perfil", profileUpdateTask.exception)
+                                        Toast.makeText(context, "Error al actualizar el perfil: ${profileUpdateTask.exception?.localizedMessage}", Toast.LENGTH_LONG).show()
+                                    }
                                 }
-                                .addOnFailureListener { e ->
-                                    Log.w("Firebase", "Error al crear la colección de libros", e)
-                                    Toast.makeText(context, "Error al crear los datos del usuario", Toast.LENGTH_SHORT).show()
-                                }
-
-                            Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
                         } else {
                             // Si el registro falla, muestra un mensaje
                             Log.w("Firebase", "Error en el registro", task.exception)
-                            Toast.makeText(context, "Error en el registro: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Error en el registro: ${task.exception?.localizedMessage}", Toast.LENGTH_LONG).show()
                         }
                     }
             } else {

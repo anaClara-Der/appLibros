@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:padding="20dp">
 
 
@@ -76,6 +75,9 @@
     </RadioGroup>
 
 
+
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addBtnBooks"
         android:layout_width="wrap_content"
@@ -83,7 +85,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_add_book"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/brown"
         android:contentDescription="botono para agregar libros"
         />
 
