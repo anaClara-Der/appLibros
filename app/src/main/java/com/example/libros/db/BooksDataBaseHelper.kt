@@ -21,13 +21,13 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
         private const val COLUM_STATE = "state"
         private const val COLUM_REVIEW = "review"
         private const val COLUM_USER_ID = "userId"
-
+        private const val COLUM_IMAGE_PATH = "imagePath"
     }
 
     //Se crea la tabla en la base de datos
     override fun onCreate(db: SQLiteDatabase?) {
         val createTableQuery =
-            "CREATE TABLE $TABLE_NAME ($COLUM_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUM_TITLE TEXT, $COLUM_AUTHOR TEXT, $COLUM_STATE INTEGER, $COLUM_REVIEW TEXT, $COLUM_USER_ID TEXT)"
+            "CREATE TABLE $TABLE_NAME ($COLUM_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUM_TITLE TEXT, $COLUM_AUTHOR TEXT, $COLUM_STATE INTEGER, $COLUM_REVIEW TEXT, $COLUM_USER_ID TEXT, $COLUM_IMAGE_PATH TEXT)"
         db?.execSQL(createTableQuery)
     }
     //se manejan las actualizaciones en la base de datos
@@ -49,6 +49,7 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
             put(COLUM_STATE,  if (book.state) 1 else 0)
             put(COLUM_REVIEW, book.review)
             put(COLUM_USER_ID, book.userId)
+            put(COLUM_IMAGE_PATH, book.imagePath)
         }
         db.insert(TABLE_NAME, null, values)
         db.close()
@@ -74,8 +75,9 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
             val state = cursor.getInt(cursor.getColumnIndexOrThrow(COLUM_STATE)) == 1
             val review = cursor.getString(cursor.getColumnIndexOrThrow(COLUM_REVIEW))
             val userId = cursor.getString(cursor.getColumnIndexOrThrow(COLUM_USER_ID))
+            val imagePath = cursor.getString(cursor.getColumnIndexOrThrow(COLUM_IMAGE_PATH)) // Obtener el path de la imagen
 
-            books.add(Book(id, title, author, state, review, userId))
+            books.add(Book(id, title, author, state, review, userId,imagePath))
         }
         cursor.close()
         db.close()

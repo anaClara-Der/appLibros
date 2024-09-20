@@ -37,10 +37,10 @@ class AddBookActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_book)
-        dbHelper = BooksDataBaseHelper(this)// Se inicializa la base de datos
+        dbHelper = BooksDataBaseHelper(this)// Inicializa la base de datos sqlite
         auth = FirebaseAuth.getInstance()
 
-        // Se inicializan los componentes
+        // Se inicializan los componentes del layout
         titleEditText = findViewById(R.id.addTitle)
         authorEditText = findViewById(R.id.addAuthor)
         stateSpinner = findViewById(R.id.spinnerState)
@@ -54,11 +54,10 @@ class AddBookActivity : AppCompatActivity() {
             saveBook()
         }
 
-        image.setOnClickListener{
+        image.setOnClickListener{ //Se toma la fotografía de la cámara o la galería
             pickImage()
         }
     }
-
     //Agregar una imagen
     private val  resultImg =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
@@ -72,10 +71,9 @@ class AddBookActivity : AppCompatActivity() {
                 }
         }
 
-    //Función para agregar estados al spinner. Leído o no leído
+    //Función para agregar estados al spinner: leído o no leído
     private fun stateSpinner(){
         val ratingSpinner = findViewById<Spinner>(R.id.spinnerState)
-
         val adapter = ArrayAdapter.createFromResource(
             this,
             R.array.state_array,
@@ -108,6 +106,7 @@ class AddBookActivity : AppCompatActivity() {
             else -> false
         }
         val userId = auth.currentUser?.uid ?: ""
+        val imagePath = imageUri?.path // Obtener el path de la imagen
 
         if(title.isNotEmpty() or author.isNotEmpty() or review.isNotEmpty()){
             // Creo un  un objeto Book del tipo Book
@@ -117,7 +116,8 @@ class AddBookActivity : AppCompatActivity() {
                 author = author,
                 state = state,
                 review = review,
-                userId = userId
+                userId = userId,
+                imagePath = imagePath
                 )
             // Insertar el libro en la base de datos
             dbHelper.insertBook(book)

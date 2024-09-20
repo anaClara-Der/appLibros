@@ -8,5 +8,6 @@ data class Book (
     val author: String,
     val state:Boolean,
     val review:String,
-    val userId: String
+    val userId: String,
+    val imagePath: String?
     )

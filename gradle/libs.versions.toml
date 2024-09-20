@@ -12,6 +12,7 @@ constraintlayout = "2.1.4"
 firebaseBom ="33.2.0"
 googleServiceV="4.4.2"
 imagePickerV = "2.1"
+imageGlideV = "4.16.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,6 +27,7 @@ firebase-bom = {module = "com.google.firebase:firebase-bom", version.ref = "fire
 firebase-auth = {module = "com.google.firebase:firebase-auth-ktx"}
 firebase-firestore= {module= "com.google.firebase:firebase-firestore"}
 imagePicker = {group="com.github.dhaval2404", name = "imagepicker", version.ref = "imagePickerV"}
+imageGlide = { group="com.github.bumptech.glide", name ="glide", version.ref = "imageGlideV"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

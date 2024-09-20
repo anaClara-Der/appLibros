@@ -40,10 +40,12 @@ android {
 dependencies {
         val fragment_version = "1.8.2"
 
+
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
     implementation (libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.imagePicker)
+    implementation(libs.imageGlide)
     implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
