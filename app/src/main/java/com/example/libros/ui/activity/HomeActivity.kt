@@ -21,6 +21,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var dbHelper: BooksDataBaseHelper
     private lateinit var bookAdapter: BookAdapter
     private lateinit var userName: TextView
+    private val bookList: MutableList<Book> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,9 @@ class HomeActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerViewBooks)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        // Inicializa el adaptador con la lista vacía y lo asigna al RecyclerView
+        bookAdapter = BookAdapter(bookList)
+        recyclerView.adapter = bookAdapter
 
         // Obtener el usuario actual
         val user = auth.currentUser
@@ -51,13 +55,15 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, AddBookActivity::class.java)
             startActivity(intent)
         }
-
     }
     private fun loadBooks(userId: String) {
         val books: List<Book> = dbHelper.getBooksByUser(userId)
+
+        // Actualiza la lista de libros y notifica al adaptador
         if (books.isNotEmpty()) {
-            bookAdapter = BookAdapter(books)
-            recyclerView.adapter = bookAdapter
+            bookList.clear()  // Limpia la lista actual
+            bookList.addAll(books)  // Añade los nuevos libros
+            bookAdapter.notifyDataSetChanged()  // Notifica al adaptador que los datos han cambiado
         } else {
             Toast.makeText(this, "No tienes libros guardados", Toast.LENGTH_SHORT).show()
         }

@@ -11,49 +11,30 @@
     <!--Cabecera con título, cerrar y guardar-->
 
 
-
-    <LinearLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <ImageView
+        android:id="@+id/clouse"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:src="@drawable/ic_clouse"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/clouse"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_clouse"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-        <TextView
-            android:id="@+id/titleAddBook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Añadir libro"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_weight="2" />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/brown"
-            android:textColor="@color/white"
-            android:text="Guardar"
-            android:textSize="14sp"
-            app:cornerRadius="16dp"
-            android:layout_gravity="end"
-            />
-    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:backgroundTint="@color/brown"
+        android:text="Guardar"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 
     <!--Card con la imagen-->
@@ -61,15 +42,14 @@
         android:id="@+id/cardImg"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/white"
         app:cardElevation="0dp"
         app:cardUseCompatPadding="true"
-        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerLayout"
-        app:layout_constraintWidth_percent="0.5"
-        android:background="@color/white">
+        app:layout_constraintTop_toBottomOf="@+id/add"
+        app:layout_constraintWidth_percent="0.5">
 
         <!--Container para acomodar la imagen y el ícono-->
         <androidx.constraintlayout.widget.ConstraintLayout

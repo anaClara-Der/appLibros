@@ -27,8 +27,8 @@ class BookAdapter(private val bookList: List<Book>) : RecyclerView.Adapter<BookA
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = bookList[position]
         holder.title.text = book.title
-        holder.author.text = book.author
-        holder.state.text = if (book.state) "Leído" else "Por leer"
+        holder.author.text = "Autor: ${book.author}"
+        holder.state.text = "Estado: ${if (book.state) "Leído" else "No leído"}"
 
         // Cargar la imagen usando Glide desde la ruta local
         Glide.with(holder.itemView.context)
