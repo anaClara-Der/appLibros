@@ -124,7 +124,7 @@ class AddBookActivity : AppCompatActivity() {
 
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-            finishAffinity()
+
             Toast.makeText(this, "Libro guardado", Toast.LENGTH_SHORT).show()
         } else{
             Toast.makeText(this, "Es necesario que completes al menos uno de los campos", Toast.LENGTH_SHORT).show()

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.libros.R
 import com.example.libros.model.Book
-
+//Se ocupa de tomar la información de la bd y agregarla a la recycler
 class BookAdapter(private val bookList: List<Book>) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,5 +38,5 @@ class BookAdapter(private val bookList: List<Book>) : RecyclerView.Adapter<BookA
             .into(holder.imageView)
     }
 
-    override fun getItemCount() = bookList.size
+    override fun getItemCount(): Int = bookList.size
 }
