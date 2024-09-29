@@ -2,6 +2,8 @@ package com.example.libros.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,13 +24,18 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bookAdapter: BookAdapter
     private lateinit var userName: TextView
     private val bookList: MutableList<Book> = mutableListOf()
+    private lateinit var rbAllBooks: RadioButton
+    private lateinit var rbReadBooks: RadioButton
+    private lateinit var rbUnreadBooks: RadioButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
     //Bases de datos
         auth = FirebaseAuth.getInstance()
         dbHelper = BooksDataBaseHelper(this)
+
     //Layout
         userName = findViewById(R.id.nameHome)
         val buttonAddBook = findViewById<FloatingActionButton>(R.id.addBtnBooks)
@@ -45,6 +52,21 @@ class HomeActivity : AppCompatActivity() {
             userName.text = "Hola, Usuario"
             Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
         }
+    //Inicializar los radioButtons
+        rbAllBooks = findViewById(R.id.rbAllBooks)
+        rbReadBooks = findViewById(R.id.rbReadBooks)
+        rbUnreadBooks = findViewById(R.id.rbUnreadBooks)
+
+        // Listener para el RadioGroup
+        val filterBooksGroup = findViewById<RadioGroup>(R.id.filterBooksGroup)
+        filterBooksGroup.setOnCheckedChangeListener { _, checkedId ->
+            val userId = user?.uid ?: ""
+            when (checkedId) {
+                R.id.rbAllBooks -> loadBooks(userId) // Cargar todos los libros
+                R.id.rbReadBooks -> loadBooksByState(userId, true) // Cargar solo leídos
+                R.id.rbUnreadBooks -> loadBooksByState(userId, false) // Cargar solo no leídos
+            }
+        }
 
         //Botónpara agregar libros: llevará a la activity de addBook
         buttonAddBook.setOnClickListener {
@@ -59,28 +81,38 @@ class HomeActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Inicializa el adaptador con la lista vacía y lo asigna al RecyclerView
-        bookAdapter = BookAdapter(bookList)
+        bookAdapter = BookAdapter(bookList){ book ->
+            deleteBook(book) // Callback para eliminar
+        }
         recyclerView.adapter = bookAdapter
     }
-//Cargar libro
-    private fun loadBooks(userId: String) {
-        val books: List<Book> = dbHelper.getBooksByUser(userId)
-        // Actualiza la lista de libros y notifica al adaptador
-        if (books.isNotEmpty()) {
-            val previousSize = bookList.size
-            bookList.clear()  // Limpia la lista actual
-            bookAdapter.notifyItemRangeRemoved(0,previousSize) //
-            bookList.addAll(books)  // Añade los nuevos libros
-            bookAdapter.notifyItemRangeInserted(0,books.size)  // Notifica al adaptador que los datos han cambiado
-        } else {
-            Toast.makeText(this, "No tienes libros guardados", Toast.LENGTH_SHORT).show()
-        }
+//Cargar todos los libro
+// Cargar todos los libros
+private fun loadBooks(userId: String) {
+    val books: List<Book> = dbHelper.getBooksByUser(userId)
+    updateBookList(books)
+}
+
+    // Cargar libros por estado
+    private fun loadBooksByState(userId: String, isRead: Boolean) {
+        val books: List<Book> = dbHelper.getBooksByUser(userId).filter { it.state == isRead }
+        updateBookList(books)
     }
-    override fun onResume() {
-        super.onResume()
-        val user = auth.currentUser
-        user?.let {
-            loadBooks(it.uid)
-        }
+
+    // Actualizar la lista de libros en el RecyclerView
+    private fun updateBookList(books: List<Book>) {
+        val previousSize = bookList.size
+        bookList.clear()
+        bookAdapter.notifyItemRangeRemoved(0, previousSize)
+        bookList.addAll(books)
+        bookAdapter.notifyItemRangeInserted(0, books.size)
+    }
+
+    // Eliminar libro
+    private fun deleteBook(book: Book) {
+        dbHelper.deleteBook(book.id) // Eliminar de la base de datos
+        bookList.remove(book) // Eliminar de la lista
+        bookAdapter.notifyDataSetChanged() // Notificar al adaptador
+        Toast.makeText(this, "Libro eliminado", Toast.LENGTH_SHORT).show()
     }
 }

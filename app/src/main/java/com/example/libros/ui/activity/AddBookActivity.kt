@@ -29,15 +29,18 @@ class AddBookActivity : AppCompatActivity() {
     private lateinit var stateSpinner: Spinner
     private lateinit var reviewEditText: EditText
     private lateinit var image:ImageView
+    private lateinit var closeImg:ImageView
     private var imageUri: Uri? = null
     private lateinit var auth: FirebaseAuth
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_book)
-        dbHelper = BooksDataBaseHelper(this)// Inicializa la base de datos sqlite
+        // Inicializa la base de datos sqlite
+        dbHelper = BooksDataBaseHelper(this)
         auth = FirebaseAuth.getInstance()
 
         // Se inicializan los componentes del layout
@@ -47,15 +50,21 @@ class AddBookActivity : AppCompatActivity() {
         reviewEditText = findViewById(R.id.addReview)
         saveButton = findViewById(R.id.add)
         image = findViewById(R.id.bookImage)
+        closeImg =  findViewById(R.id.close)
+        //Se configura el spinner con los dos valores
+        stateSpinner()
 
-        stateSpinner() //Se configura el spinner con los dos valores
-
-        saveButton.setOnClickListener { // Se configura el botón para guardar
+        // Se configura el botón para guardar
+        saveButton.setOnClickListener {
             saveBook()
         }
-
-        image.setOnClickListener{ //Se toma la fotografía de la cámara o la galería
+        //Se toma la fotografía de la cámara o la galería
+        image.setOnClickListener{
             pickImage()
+        }
+        //Al precionar la X para salir de la página sin guardar nada
+        closeImg.setOnClickListener{
+            closeActivity()
         }
     }
     //Agregar una imagen
@@ -71,6 +80,8 @@ class AddBookActivity : AppCompatActivity() {
                 }
         }
 
+
+    //FUNCIONES
     //Función para agregar estados al spinner: leído o no leído
     private fun stateSpinner(){
         val ratingSpinner = findViewById<Spinner>(R.id.spinnerState)
@@ -83,7 +94,6 @@ class AddBookActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         ratingSpinner.adapter = adapter
     }
-
     //Función para seleccionar imagen
     private fun pickImage(){
         ImagePicker.with(this)
@@ -94,7 +104,12 @@ class AddBookActivity : AppCompatActivity() {
                 resultImg.launch(intent)
             }
     }
-
+    //Función al clickear en la X
+    private fun closeActivity(){
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish() // Cierra la actividad actual
+    }
     //Función al clickear el botón guardar: se guarda o no
     private fun saveBook(){
         val title = titleEditText.text.toString()
@@ -130,8 +145,5 @@ class AddBookActivity : AppCompatActivity() {
             Toast.makeText(this, "Es necesario que completes al menos uno de los campos", Toast.LENGTH_SHORT).show()
         }
 
-
     }
-
-
 }

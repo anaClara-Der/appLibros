@@ -83,4 +83,11 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
         db.close()
         return books
     }
+
+    //Borrar libros de la lista
+    fun deleteBook(bookId: Int) {
+        val db = writableDatabase
+        db.delete(TABLE_NAME, "$COLUM_ID = ?", arrayOf(bookId.toString()))
+        db.close()
+    }
 }

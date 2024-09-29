@@ -12,12 +12,12 @@
 
 
     <ImageView
-        android:id="@+id/clouse"
+        android:id="@+id/close"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="start"
         android:layout_weight="1"
-        android:src="@drawable/ic_clouse"
+        android:src="@drawable/ic_close"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
