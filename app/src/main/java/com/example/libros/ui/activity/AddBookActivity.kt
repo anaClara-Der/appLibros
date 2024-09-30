@@ -66,6 +66,9 @@ class AddBookActivity : AppCompatActivity() {
         closeImg.setOnClickListener{
             closeActivity()
         }
+        //Editar un libro ya agregado
+        editBook()
+
     }
     //Agregar una imagen
     private val  resultImg =
@@ -106,11 +109,9 @@ class AddBookActivity : AppCompatActivity() {
     }
     //Función al clickear en la X
     private fun closeActivity(){
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
-        finish() // Cierra la actividad actual
+        finish()
     }
-    //Función al clickear el botón guardar: se guarda o no
+    //Función al clickear el botón guardar: se guarda o se edita un libro existente
     private fun saveBook(){
         val title = titleEditText.text.toString()
         val author = authorEditText.text.toString()
@@ -123,27 +124,64 @@ class AddBookActivity : AppCompatActivity() {
         val userId = auth.currentUser?.uid ?: ""
         val imagePath = imageUri?.path // Obtener el path de la imagen
 
-        if(title.isNotEmpty() or author.isNotEmpty() or review.isNotEmpty()){
-            // Creo un  un objeto Book del tipo Book
-            val book = Book(
-                id = 0, // El ID se genera automáticamente
-                title = title,
-                author = author,
-                state = state,
-                review = review,
-                userId = userId,
-                imagePath = imagePath
-                )
-            // Insertar el libro en la base de datos
-            dbHelper.insertBook(book)
 
+        if(title.isNotEmpty() or author.isNotEmpty() or review.isNotEmpty()){
+            val bookId = intent.getIntExtra("bookId", -1)
+            // Creo un  un objeto Book del tipo Book
+            if (bookId != -1) {
+                // Si es un libro existente, actualiza el libro
+                val book = Book(
+                    id = bookId,
+                    title = title,
+                    author = author,
+                    state = state,
+                    review = review,
+                    userId = userId,
+                    imagePath = imagePath
+                )
+                dbHelper.updateBook(book)  // Llama a la función de actualización
+            } else {
+                // Si es un libro nuevo, lo inserta
+                val book = Book(
+                    id = 0, // El ID se genera automáticamente
+                    title = title,
+                    author = author,
+                    state = state,
+                    review = review,
+                    userId = userId,
+                    imagePath = imagePath
+                )
+                dbHelper.insertBook(book)
+            }
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
-
             Toast.makeText(this, "Libro guardado", Toast.LENGTH_SHORT).show()
-        } else{
-            Toast.makeText(this, "Es necesario que completes al menos uno de los campos", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Es necesario que completes todos los campos", Toast.LENGTH_SHORT).show()
         }
 
+    }
+    //Función para editar lo que se pase en el intent del fragment
+    private fun editBook(){
+        // Verificar si los datos han sido pasados desde el fragment
+        val bookTitle = intent.getStringExtra("title")
+        val bookAuthor = intent.getStringExtra("author")
+        val bookState = intent.getBooleanExtra("state", false)
+        val bookImagePath = intent.getStringExtra("imagePath")
+        val bookReview = intent.getStringExtra("review")
+
+        // Si los datos están presentes, rellenar los campos con ellos
+        if (bookTitle != null && bookAuthor != null && bookReview != null) {
+            titleEditText.setText(bookTitle)
+            authorEditText.setText(bookAuthor)
+            reviewEditText.setText(bookReview)
+            stateSpinner.setSelection(if (bookState) 0 else 1)  // Seleccionar "Leído" o "Por leer"
+
+            // Si hay imagen, mostrarla
+            if (bookImagePath != null) {
+                imageUri = Uri.parse(bookImagePath)
+                image.setImageURI(imageUri)
+            }
+        }
     }
 }

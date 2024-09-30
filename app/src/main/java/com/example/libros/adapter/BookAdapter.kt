@@ -11,7 +11,7 @@ import com.example.libros.R
 import com.example.libros.model.Book
 
 //Se ocupa de tomar la información de la bd y agregarla a la recycler
-class BookAdapter(private val bookList: MutableList<Book>, private val onBookDeleted: (Book) -> Unit) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
+class BookAdapter(private val bookList: MutableList<Book>, private val onBookDeleted: (Book) -> Unit, private val onBookClicked: (Book) -> Unit ) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.textViewTitle)
@@ -19,6 +19,12 @@ class BookAdapter(private val bookList: MutableList<Book>, private val onBookDel
         val state: TextView = itemView.findViewById(R.id.textViewState)
         val imageView: ImageView = itemView.findViewById(R.id.imageBook)
         val deleteButton: ImageView = itemView.findViewById(R.id.btnDelete)
+        // Agrega el listener para la card
+        init {
+            itemView.setOnClickListener {
+                onBookClicked(bookList[adapterPosition])
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {

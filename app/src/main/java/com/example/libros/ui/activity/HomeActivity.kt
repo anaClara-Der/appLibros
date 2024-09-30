@@ -2,6 +2,9 @@ package com.example.libros.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -13,6 +16,7 @@ import com.example.libros.R
 import com.example.libros.db.BooksDataBaseHelper
 import com.example.libros.model.Book
 import com.example.libros.ui.adapter.BookAdapter
+import com.example.libros.ui.fragments.BookDetailsFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 
@@ -23,23 +27,31 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var dbHelper: BooksDataBaseHelper
     private lateinit var bookAdapter: BookAdapter
     private lateinit var userName: TextView
-    private val bookList: MutableList<Book> = mutableListOf()
+    private lateinit var searchBooks: EditText
     private lateinit var rbAllBooks: RadioButton
     private lateinit var rbReadBooks: RadioButton
     private lateinit var rbUnreadBooks: RadioButton
+    private val bookList: MutableList<Book> = mutableListOf() //Lista de libros
+    private val filteredList: MutableList<Book> = mutableListOf() // Lista de libros filtrada
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-    //Bases de datos
+        //Bases de datos
         auth = FirebaseAuth.getInstance()
         dbHelper = BooksDataBaseHelper(this)
 
-    //Layout
+    //Buscar elementos del layout
         userName = findViewById(R.id.nameHome)
+        searchBooks = findViewById(R.id.searchBooks)
+        rbAllBooks = findViewById(R.id.rbAllBooks)
+        rbReadBooks = findViewById(R.id.rbReadBooks)
+        rbUnreadBooks = findViewById(R.id.rbUnreadBooks)
+        val filterBooksGroup = findViewById<RadioGroup>(R.id.filterBooksGroup)
         val buttonAddBook = findViewById<FloatingActionButton>(R.id.addBtnBooks)
-    //Inicializar el recycler
+
+        //Inicializar el recycler
         initRecycler()
         
         // Obtener el usuario actual
@@ -48,17 +60,12 @@ class HomeActivity : AppCompatActivity() {
             val displayName = user.displayName
             userName.text = "Hola, $displayName"
             loadBooks(user.uid)
-        } else {
+        } else { //Acá falta hacer que si no está registrado vuelva al inicio de sesión
             userName.text = "Hola, Usuario"
             Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
         }
-    //Inicializar los radioButtons
-        rbAllBooks = findViewById(R.id.rbAllBooks)
-        rbReadBooks = findViewById(R.id.rbReadBooks)
-        rbUnreadBooks = findViewById(R.id.rbUnreadBooks)
 
-        // Listener para el RadioGroup
-        val filterBooksGroup = findViewById<RadioGroup>(R.id.filterBooksGroup)
+        // Listener para el RadioGroup (todos, leídos, por leer)
         filterBooksGroup.setOnCheckedChangeListener { _, checkedId ->
             val userId = user?.uid ?: ""
             when (checkedId) {
@@ -73,25 +80,52 @@ class HomeActivity : AppCompatActivity() {
             val intent = Intent(this, AddBookActivity::class.java)
             startActivity(intent)
         }
+
+        // TextWatcher para el buscador
+        searchBooks.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterBooks(s.toString()) // función para filtar la lista de libros
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
     }
-//Funciones
-    //Inicializar recycler
-    private fun initRecycler(){
+
+    //FUNCIONES
+
+    // Inicializar el recycler
+    private fun initRecycler() {
         recyclerView = findViewById(R.id.recyclerViewBooks)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Inicializa el adaptador con la lista vacía y lo asigna al RecyclerView
-        bookAdapter = BookAdapter(bookList){ book ->
+        // Inicializa el adaptador con la lista **filtrada** y lo asigna al RecyclerView
+        bookAdapter = BookAdapter(filteredList, { book ->
             deleteBook(book) // Callback para eliminar
+        }) { book ->
+            showBookDetailsPopup(book) // Nueva función para mostrar detalles del libro
         }
         recyclerView.adapter = bookAdapter
     }
-//Cargar todos los libro
-// Cargar todos los libros
-private fun loadBooks(userId: String) {
-    val books: List<Book> = dbHelper.getBooksByUser(userId)
-    updateBookList(books)
-}
+    //Crea el dialogo del fragment para mostrar el popup
+    private fun showBookDetailsPopup(book: Book) {
+        val dialog = BookDetailsFragment.newInstance(
+            book.title?: "Sin título disponible",
+            book.author?: "Sin autor disponible",
+            book.state,
+            book.imagePath ?: "",  // Aquí se pasa la ruta de la imagen, en caso de ser null se pasa una cadena vacía
+            book.review ?: "Sin reseña disponible" // Se asegura que review no sea null
+        )
+        dialog.show(supportFragmentManager, "BookDetailsDialog")
+    }
+
+    // Cargar todos los libros
+    private fun loadBooks(userId: String) {
+        val books: List<Book> = dbHelper.getBooksByUser(userId)
+        updateBookList(books)
+    }
 
     // Cargar libros por estado
     private fun loadBooksByState(userId: String, isRead: Boolean) {
@@ -101,13 +135,28 @@ private fun loadBooks(userId: String) {
 
     // Actualizar la lista de libros en el RecyclerView
     private fun updateBookList(books: List<Book>) {
-        val previousSize = bookList.size
         bookList.clear()
-        bookAdapter.notifyItemRangeRemoved(0, previousSize)
         bookList.addAll(books)
-        bookAdapter.notifyItemRangeInserted(0, books.size)
+        filteredList.clear()
+        filteredList.addAll(books) // Actualizar también la lista filtrada
+        bookAdapter.notifyDataSetChanged()
     }
 
+    // Filtrar libros según el texto ingresado
+    private fun filterBooks(query: String) {
+        val filteredBooks = if (query.isEmpty()) {
+            bookList // Mostrar todos los libros si no hay query
+        } else {
+            bookList.filter {
+                it.title.contains(query, ignoreCase = true) ||
+                        it.author.contains(query, ignoreCase = true)
+            }
+        }
+
+        filteredList.clear()
+        filteredList.addAll(filteredBooks)
+        bookAdapter.notifyDataSetChanged()
+    }
     // Eliminar libro
     private fun deleteBook(book: Book) {
         dbHelper.deleteBook(book.id) // Eliminar de la base de datos
