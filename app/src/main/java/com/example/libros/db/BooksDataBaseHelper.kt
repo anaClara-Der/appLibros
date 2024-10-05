@@ -91,19 +91,5 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
         db.close()
     }
 
-    //Editar los libros
-    fun updateBook(book: Book): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put(COLUM_TITLE, book.title)
-            put(COLUM_AUTHOR, book.author)
-            put(COLUM_STATE, if (book.state) 1 else 0)
-            put(COLUM_REVIEW, book.review)
-            put(COLUM_IMAGE_PATH, book.imagePath)
-            put(COLUM_USER_ID, book.userId)
-
-        }
-        return db.update(TABLE_NAME, contentValues, "$COLUM_ID = ?", arrayOf(book.id.toString()))
-    }
 
 }

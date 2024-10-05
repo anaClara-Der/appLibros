@@ -11,7 +11,10 @@ import com.example.libros.R
 import com.example.libros.model.Book
 
 //Se ocupa de tomar la información de la bd y agregarla a la recycler
-class BookAdapter(private val bookList: MutableList<Book>, private val onBookDeleted: (Book) -> Unit, private val onBookClicked: (Book) -> Unit ) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
+class BookAdapter(
+    private val bookList: MutableList<Book>,
+    private val onBookDeleted: (Book) -> Unit,
+    private val onBookClicked: (Book) -> Unit ) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.textViewTitle)

@@ -66,8 +66,7 @@ class AddBookActivity : AppCompatActivity() {
         closeImg.setOnClickListener{
             closeActivity()
         }
-        //Editar un libro ya agregado
-        editBook()
+
 
     }
     //Agregar una imagen
@@ -128,20 +127,6 @@ class AddBookActivity : AppCompatActivity() {
         if(title.isNotEmpty() or author.isNotEmpty() or review.isNotEmpty()){
             val bookId = intent.getIntExtra("bookId", -1)
             // Creo un  un objeto Book del tipo Book
-            if (bookId != -1) {
-                // Si es un libro existente, actualiza el libro
-                val book = Book(
-                    id = bookId,
-                    title = title,
-                    author = author,
-                    state = state,
-                    review = review,
-                    userId = userId,
-                    imagePath = imagePath
-                )
-                dbHelper.updateBook(book)  // Llama a la función de actualización
-            } else {
-                // Si es un libro nuevo, lo inserta
                 val book = Book(
                     id = 0, // El ID se genera automáticamente
                     title = title,
@@ -152,10 +137,10 @@ class AddBookActivity : AppCompatActivity() {
                     imagePath = imagePath
                 )
                 dbHelper.insertBook(book)
-            }
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             Toast.makeText(this, "Libro guardado", Toast.LENGTH_SHORT).show()
+
         } else {
             Toast.makeText(this, "Es necesario que completes todos los campos", Toast.LENGTH_SHORT).show()
         }

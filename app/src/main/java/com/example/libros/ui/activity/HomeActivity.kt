@@ -101,7 +101,7 @@ class HomeActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewBooks)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Inicializa el adaptador con la lista **filtrada** y lo asigna al RecyclerView
+        // Inicializa el adaptador con la lista filtrada y lo asigna al RecyclerView
         bookAdapter = BookAdapter(filteredList, { book ->
             deleteBook(book) // Callback para eliminar
         }) { book ->
@@ -140,7 +140,9 @@ class HomeActivity : AppCompatActivity() {
         filteredList.clear()
         filteredList.addAll(books) // Actualizar también la lista filtrada
         bookAdapter.notifyDataSetChanged()
+
     }
+
 
     // Filtrar libros según el texto ingresado
     private fun filterBooks(query: String) {
@@ -160,7 +162,8 @@ class HomeActivity : AppCompatActivity() {
     // Eliminar libro
     private fun deleteBook(book: Book) {
         dbHelper.deleteBook(book.id) // Eliminar de la base de datos
-        bookList.remove(book) // Eliminar de la lista
+        bookList.remove(book) // Eliminar de la lista COMPLETA
+        filteredList.remove(book) // Elimina de la lista que se ve
         bookAdapter.notifyDataSetChanged() // Notificar al adaptador
         Toast.makeText(this, "Libro eliminado", Toast.LENGTH_SHORT).show()
     }
