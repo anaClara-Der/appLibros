@@ -66,7 +66,9 @@ class AddBookActivity : AppCompatActivity() {
         closeImg.setOnClickListener{
             closeActivity()
         }
+        //Se rellena con los datos que vienen del fragment con la información del libro
 
+        dataFragment()
 
     }
     //Agregar una imagen
@@ -123,10 +125,37 @@ class AddBookActivity : AppCompatActivity() {
         val userId = auth.currentUser?.uid ?: ""
         val imagePath = imageUri?.path // Obtener el path de la imagen
 
+        val bookId = intent.getIntExtra("bookId", -1)
+        val bookPosition = intent.getIntExtra("position", -1)
 
         if(title.isNotEmpty() or author.isNotEmpty() or review.isNotEmpty()){
-            val bookId = intent.getIntExtra("bookId", -1)
-            // Creo un  un objeto Book del tipo Book
+            //Si el libro existe
+            if(bookId >= 0){
+                val book = Book(
+                    id = bookId, // Usar el bookId existente
+                    title = title,
+                    author = author,
+                    state = state,
+                    review = review,
+                    userId = userId,
+                    imagePath = imagePath
+                )
+                // Devolver el libro editado y la posición
+                dbHelper.updateBook(book)
+                val resultIntent = Intent()
+                intent.putExtra("title", title)
+                intent.putExtra("author", author)
+                intent.putExtra("state", state)
+                intent.putExtra("imagePath", imagePath)
+                intent.putExtra("review", review)
+                intent.putExtra("position", bookPosition)  // Pasar la posición
+                intent.putExtra("bookId", bookId)
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish() // Finaliza la actividad sin recrear la HomeActivity
+            } else{ //Si no existe
+                // Creo un  un objeto Book del tipo Book
                 val book = Book(
                     id = 0, // El ID se genera automáticamente
                     title = title,
@@ -137,9 +166,12 @@ class AddBookActivity : AppCompatActivity() {
                     imagePath = imagePath
                 )
                 dbHelper.insertBook(book)
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            Toast.makeText(this, "Libro guardado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Libro guardado", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
 
         } else {
             Toast.makeText(this, "Es necesario que completes todos los campos", Toast.LENGTH_SHORT).show()
@@ -147,13 +179,14 @@ class AddBookActivity : AppCompatActivity() {
 
     }
     //Función para editar lo que se pase en el intent del fragment
-    private fun editBook(){
+    private fun dataFragment(){
         // Verificar si los datos han sido pasados desde el fragment
         val bookTitle = intent.getStringExtra("title")
         val bookAuthor = intent.getStringExtra("author")
         val bookState = intent.getBooleanExtra("state", false)
         val bookImagePath = intent.getStringExtra("imagePath")
         val bookReview = intent.getStringExtra("review")
+
 
         // Si los datos están presentes, rellenar los campos con ellos
         if (bookTitle != null && bookAuthor != null && bookReview != null) {

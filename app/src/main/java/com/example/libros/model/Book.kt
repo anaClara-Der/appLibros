@@ -4,10 +4,10 @@ import android.net.Uri
 
 data class Book (
     val id: Int,
-    val title: String,
-    val author: String,
-    val state:Boolean,
-    val review:String,
+    var title: String,
+    var author: String,
+    var state:Boolean,
+    var review:String,
     val userId: String,
-    val imagePath: String?
+    var imagePath: String?
     )

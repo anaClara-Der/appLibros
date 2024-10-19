@@ -1,9 +1,11 @@
 package com.example.libros.ui.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -33,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var rbUnreadBooks: RadioButton
     private val bookList: MutableList<Book> = mutableListOf() //Lista de libros
     private val filteredList: MutableList<Book> = mutableListOf() // Lista de libros filtrada
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +96,43 @@ class HomeActivity : AppCompatActivity() {
         })
 
     }
+/*
+    //Recibe los datos una vez editados en AddBook y actualiza el Recycler en la posición de la card.
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        super.onActivityResult(requestCode, resultCode, data)
+        if ( resultCode == Activity.RESULT_OK && data != null) {
+
+            val position = data.getIntExtra("position", -1)
+
+            //Datos editados
+            if (position >= 0) {
+                val updatedTitle = data.getStringExtra("title")
+                val updatedAuthor = data.getStringExtra("author")
+                val updatedState = data.getBooleanExtra("state", false)
+                val updatedImagePath = data.getStringExtra("imagePath")
+                val updatedReview = data.getStringExtra("review")
+
+                // Crea un nuevo libro con los valores actualizados
+                val updatedBook = Book(
+                    id = bookList[position].id, // Preservar el ID original
+                    title = updatedTitle ?: filteredList[position].title,
+                    author = updatedAuthor ?: filteredList[position].author,
+                    state = updatedState,
+                    review = updatedReview ?: filteredList[position].review,
+                    userId = filteredList[position].userId,
+                    imagePath = updatedImagePath
+                )
+
+                // Actualiza el libro en la lista
+                bookAdapter.updateBookAtPosition(updatedBook, position)
+                Log.i("Result1", "$position")
+
+            }
+        }
+    }
+*/
+
 
     //FUNCIONES
 
@@ -104,21 +144,26 @@ class HomeActivity : AppCompatActivity() {
         // Inicializa el adaptador con la lista filtrada y lo asigna al RecyclerView
         bookAdapter = BookAdapter(filteredList, { book ->
             deleteBook(book) // Callback para eliminar
-        }) { book ->
-            showBookDetailsPopup(book) // Nueva función para mostrar detalles del libro
+        }) { book, position ->
+            showBookDetailsPopup(book, position) //  Mostrar detalles del libro
         }
         recyclerView.adapter = bookAdapter
     }
     //Crea el dialogo del fragment para mostrar el popup
-    private fun showBookDetailsPopup(book: Book) {
+    private fun showBookDetailsPopup(book: Book, position: Int) {
+       // Log.i("Esta es la posicion del libro", "$position")
         val dialog = BookDetailsFragment.newInstance(
+
             book.title?: "Sin título disponible",
             book.author?: "Sin autor disponible",
             book.state,
             book.imagePath ?: "",  // Aquí se pasa la ruta de la imagen, en caso de ser null se pasa una cadena vacía
-            book.review ?: "Sin reseña disponible" // Se asegura que review no sea null
+            book.review ?: "Sin reseña disponible", // Se asegura que review no sea null
+            position,  // Se pasa la posicion de la card
+            book.id
         )
         dialog.show(supportFragmentManager, "BookDetailsDialog")
+
     }
 
     // Cargar todos los libros
@@ -140,9 +185,7 @@ class HomeActivity : AppCompatActivity() {
         filteredList.clear()
         filteredList.addAll(books) // Actualizar también la lista filtrada
         bookAdapter.notifyDataSetChanged()
-
     }
-
 
     // Filtrar libros según el texto ingresado
     private fun filterBooks(query: String) {

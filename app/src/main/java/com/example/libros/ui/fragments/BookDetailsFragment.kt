@@ -18,6 +18,8 @@ private const val ARG_AUTHOR = "author"
 private const val ARG_STATE = "state"
 private const val ARG_IMAGE_PATH = "imagePath"
 private const val ARG_REVIEW = "review"
+private const val ARG_POSITION = "position"
+private const val ARG_BOOK_ID = "bookId"
 
 // Este fragmento es un DialogFragment que mostrará los detalles del libro
 class BookDetailsFragment : DialogFragment() {
@@ -28,10 +30,12 @@ class BookDetailsFragment : DialogFragment() {
     private var state: Boolean = false
     private var imagePath: String? = null
     private var review: String? = null
+    private var position: Int? = null
+    private var bookId: Int? = null
 
     // Método que crea una nueva instancia del fragmento con los argumentos necesarios
     companion object {
-        fun newInstance(title: String, author: String, state: Boolean, imagePath: String, review: String): BookDetailsFragment {
+        fun newInstance(title: String, author: String, state: Boolean, imagePath: String, review: String, position: Int, bookId: Int): BookDetailsFragment {
             val fragment = BookDetailsFragment()
             val args = Bundle()
             args.putString(ARG_TITLE, title)
@@ -39,6 +43,8 @@ class BookDetailsFragment : DialogFragment() {
             args.putBoolean(ARG_STATE, state)
             args.putString(ARG_IMAGE_PATH, imagePath)
             args.putString(ARG_REVIEW, review)
+            args.putInt(ARG_POSITION, position)
+            args.putInt(ARG_BOOK_ID, bookId)
             fragment.arguments = args
             return fragment
         }
@@ -53,6 +59,8 @@ class BookDetailsFragment : DialogFragment() {
             state = it.getBoolean(ARG_STATE)
             imagePath = it.getString(ARG_IMAGE_PATH)
             review = it.getString(ARG_REVIEW)
+            position = it.getInt(ARG_POSITION)
+            bookId = it.getInt(ARG_BOOK_ID)
         }
     }
 
@@ -71,10 +79,10 @@ class BookDetailsFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflar el layout para el fragment
+
         val view = inflater.inflate(R.layout.fragment_book_details, container, false)
 
-        // Asignar los valores a las vistas
+        // Asigna los valores a los elementos del layout
         val titleTextView = view.findViewById<TextView>(R.id.titleFragment)
         val authorTextView = view.findViewById<TextView>(R.id.authorFragment)
         val stateTextView = view.findViewById<TextView>(R.id.stateFragment)
@@ -83,7 +91,7 @@ class BookDetailsFragment : DialogFragment() {
         val imgCloseFragment = view.findViewById<ImageView>(R.id.closeFragent)
         val editImageView = view.findViewById<ImageView>(R.id.editFragment)
 
-        // Mostrar los detalles
+        // Muestra los detalles
         titleTextView.text = "Título: $title"
         authorTextView.text = "Autor: $author"
         stateTextView.text = "Estado: ${if (state) "Leído" else "No leído"}"
@@ -101,7 +109,6 @@ class BookDetailsFragment : DialogFragment() {
         }
 
         // Abrir AddBookActivity al hacer clic en el ícono de edición
-
         editImageView.setOnClickListener {
             val intent = Intent(requireContext(), AddBookActivity::class.java)
 
@@ -111,7 +118,8 @@ class BookDetailsFragment : DialogFragment() {
             intent.putExtra("state", state)
             intent.putExtra("imagePath", imagePath)
             intent.putExtra("review", review)
-
+            intent.putExtra("position", position)  // Pasar la posición
+            intent.putExtra("bookId", bookId)
             startActivity(intent)  // Abre la actividad para editar
         }
 

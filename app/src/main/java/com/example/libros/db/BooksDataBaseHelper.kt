@@ -56,7 +56,6 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
     }
 
     // Método para obtener libros por userId
-
     fun getBooksByUser(userId: String): List<Book> {
         val books = mutableListOf<Book>()
         val db = readableDatabase
@@ -88,6 +87,21 @@ class BooksDataBaseHelper(context: Context): SQLiteOpenHelper(
     fun deleteBook(bookId: Int) {
         val db = writableDatabase
         db.delete(TABLE_NAME, "$COLUM_ID = ?", arrayOf(bookId.toString()))
+        db.close()
+    }
+
+    //Editar libros
+    fun updateBook(book: Book): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put(COLUM_TITLE, book.title)
+            put(COLUM_AUTHOR, book.author)
+            put(COLUM_STATE, if (book.state) 1 else 0)
+            put(COLUM_REVIEW, book.review)
+            put(COLUM_IMAGE_PATH, book.imagePath)
+            put(COLUM_USER_ID, book.userId)
+        }
+        return db.update(TABLE_NAME, contentValues, "$COLUM_ID = ?", arrayOf(book.id.toString()))
         db.close()
     }
 

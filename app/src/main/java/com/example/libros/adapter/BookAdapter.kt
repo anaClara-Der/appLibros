@@ -1,5 +1,6 @@
 package com.example.libros.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import com.example.libros.model.Book
 class BookAdapter(
     private val bookList: MutableList<Book>,
     private val onBookDeleted: (Book) -> Unit,
-    private val onBookClicked: (Book) -> Unit ) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
+    private val onBookClicked: (Book, Int) -> Unit ) : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
 
     inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.textViewTitle)
@@ -25,7 +26,11 @@ class BookAdapter(
         // Agrega el listener para la card
         init {
             itemView.setOnClickListener {
-                onBookClicked(bookList[adapterPosition])
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onBookClicked(bookList[position], position) // Pasar el libro y la posición
+                }
+
             }
         }
     }
@@ -38,6 +43,7 @@ class BookAdapter(
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val book = bookList[position]
 
+        Log.i("Esta es la posicion" , "$position")
         holder.title.text = book.title
         holder.author.text = "Autor: ${book.author}"
         holder.state.text = "Estado: ${if (book.state) "Leído" else "No leído"}"
@@ -53,4 +59,9 @@ class BookAdapter(
     }
 
     override fun getItemCount(): Int = bookList.size
+
+    fun updateBookAtPosition(book: Book, position: Int) {
+        bookList[position] = book // Actualiza la lista en la posición especificada
+        notifyItemChanged(position) // Notifica al adaptador que el ítem ha cambiado
+    }
 }
