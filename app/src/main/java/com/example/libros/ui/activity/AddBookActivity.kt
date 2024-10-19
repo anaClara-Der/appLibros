@@ -67,7 +67,6 @@ class AddBookActivity : AppCompatActivity() {
             closeActivity()
         }
         //Se rellena con los datos que vienen del fragment con la información del libro
-
         dataFragment()
 
     }

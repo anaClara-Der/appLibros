@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.example.libros.R
 import com.example.libros.ui.activity.AddBookActivity
+import java.io.File
 
 // Constantes para los argumentos q se pasan al fragment
 private const val ARG_TITLE = "title"
@@ -90,6 +92,7 @@ class BookDetailsFragment : DialogFragment() {
         val imageView = view.findViewById<ImageView>(R.id.imgFrag)
         val imgCloseFragment = view.findViewById<ImageView>(R.id.closeFragent)
         val editImageView = view.findViewById<ImageView>(R.id.editFragment)
+        val shareBook = view.findViewById<ImageView>(R.id.shareFragment)
 
         // Muestra los detalles
         titleTextView.text = "Título: $title"
@@ -107,11 +110,9 @@ class BookDetailsFragment : DialogFragment() {
         imgCloseFragment.setOnClickListener {
             dismiss()
         }
-
         // Abrir AddBookActivity al hacer clic en el ícono de edición
         editImageView.setOnClickListener {
             val intent = Intent(requireContext(), AddBookActivity::class.java)
-
             // Pasar los datos actuales del libro a la actividad de edición
             intent.putExtra("title", title)
             intent.putExtra("author", author)
@@ -123,6 +124,42 @@ class BookDetailsFragment : DialogFragment() {
             startActivity(intent)  // Abre la actividad para editar
         }
 
+        //Compartir libro
+        shareBook.setOnClickListener{
+            shareBook("$title", "$author", "$state", "$imagePath", "$review")
+        }
+
         return view
     }
+
+    fun shareBook(title: String, author: String, status: String, imagePath: String, review: String) {
+        // Convertir el imagePath en Uri utilizando FileProvider
+        val imageFile = File(imagePath)
+        val imageUri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", imageFile)
+
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+
+            type = "image/*"  // Cambiar a imagen para adjuntar la imagen
+            putExtra(Intent.EXTRA_SUBJECT, "Libro: $title")
+
+            // Crear el texto con todos los datos del libro
+            val message = """
+            Te Comparto este  libro:
+            
+            Título: $title
+            Autor: $author
+            Estado: ${if (status == "true") "Leído" else "No leído"}
+            Reseña: $review
+        """.trimIndent()
+
+            putExtra(Intent.EXTRA_TEXT, message)
+            putExtra(Intent.EXTRA_STREAM, imageUri)  // Adjuntar la imagen
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)  // Conceder permiso para acceder a la URI
+        }
+
+        // Abrir el chooser para que el usuario elija la aplicación de email
+        startActivity(Intent.createChooser(intent, "Enviar email con..."))
+    }
+
 }

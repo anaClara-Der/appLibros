@@ -96,42 +96,7 @@ class HomeActivity : AppCompatActivity() {
         })
 
     }
-/*
-    //Recibe los datos una vez editados en AddBook y actualiza el Recycler en la posición de la card.
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        super.onActivityResult(requestCode, resultCode, data)
-        if ( resultCode == Activity.RESULT_OK && data != null) {
-
-            val position = data.getIntExtra("position", -1)
-
-            //Datos editados
-            if (position >= 0) {
-                val updatedTitle = data.getStringExtra("title")
-                val updatedAuthor = data.getStringExtra("author")
-                val updatedState = data.getBooleanExtra("state", false)
-                val updatedImagePath = data.getStringExtra("imagePath")
-                val updatedReview = data.getStringExtra("review")
-
-                // Crea un nuevo libro con los valores actualizados
-                val updatedBook = Book(
-                    id = bookList[position].id, // Preservar el ID original
-                    title = updatedTitle ?: filteredList[position].title,
-                    author = updatedAuthor ?: filteredList[position].author,
-                    state = updatedState,
-                    review = updatedReview ?: filteredList[position].review,
-                    userId = filteredList[position].userId,
-                    imagePath = updatedImagePath
-                )
-
-                // Actualiza el libro en la lista
-                bookAdapter.updateBookAtPosition(updatedBook, position)
-                Log.i("Result1", "$position")
-
-            }
-        }
-    }
-*/
 
 
     //FUNCIONES
