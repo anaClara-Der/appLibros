@@ -59,10 +59,10 @@ class signUpFragment : Fragment() {
                                 ?.addOnCompleteListener { profileUpdateTask ->
                                     if (profileUpdateTask.isSuccessful) {
                                         Log.d("Firebase", "User profile updated.")
-                                        // Redirigir a la HomeActivity
+                                        // Manda a la HomeActivity
                                         val intent = Intent(activity, HomeActivity::class.java)
                                         startActivity(intent)
-                                        activity?.finish() // Opcional: Finalizar la actividad actual para que no se pueda volver atrás
+                                        activity?.finish() // Termina la actividad actual para que no se pueda volver atrás
 
                                         Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
                                     } else {

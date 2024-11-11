@@ -93,7 +93,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_add_book"
-        android:backgroundTint="@color/brown"
+        android:backgroundTint="@color/primary"
         android:contentDescription="botono para agregar libros"
         />
 
