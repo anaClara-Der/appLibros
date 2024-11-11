@@ -2,7 +2,10 @@ package com.example.libros.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,10 +35,20 @@ class loginFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
+        if (auth.currentUser != null) {
+            // El usuario está autenticado, redirige al HomeActivity
+            val intent = Intent(activity, HomeActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
+
         // Llamo a los elementos del fragment
         val emailField = view.findViewById<EditText>(R.id.logEmail)
         val passwordField = view.findViewById<EditText>(R.id.logPassword)
         val loginButton = view.findViewById<Button>(R.id.btnLoginIng)
+        //Validar que cumplan con las condiciones
+        controlPassword(passwordField)
+        controlEmail(emailField)
 
         //Al hacer click en el botón de login
         loginButton.setOnClickListener {
@@ -56,7 +69,7 @@ class loginFragment : Fragment() {
                             activity?.finish() // Finaliza la actividad para que no se pueda volver atrás.
                         } else {
                             // Falló el inicio de seción
-                            Log.w("Firebase", "Error en el inicio de sesión", task.exception)
+
                             Toast.makeText(context, "Error en el inicio de sesión: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -67,4 +80,39 @@ class loginFragment : Fragment() {
         return view
     }
 
+    //Funciones
+    //Verifica que la contraseña tenga mas de 6 caracteres y menos de 20
+    private fun controlPassword(passwordField: EditText) {
+        passwordField.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val password = s.toString()
+                if (password.length in 6..20) {
+                    // Cambia el ícono a violeta cuando cumple con los requisitos
+                    passwordField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done_ok, 0)
+                } else {
+                    // Muestra el ícono en gris si no cumple
+                    passwordField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done, 0)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+    //Verificar que el mail cumpla con las condiciones
+    private fun controlEmail(emailField: EditText) {
+        emailField.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val email = s.toString()
+                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    emailField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done_ok, 0)
+                } else {
+                    emailField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done, 0)
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
 }

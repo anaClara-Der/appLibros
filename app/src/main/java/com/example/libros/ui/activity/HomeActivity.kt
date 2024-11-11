@@ -7,6 +7,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -33,10 +35,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var rbAllBooks: RadioButton
     private lateinit var rbReadBooks: RadioButton
     private lateinit var rbUnreadBooks: RadioButton
+    private lateinit var closeMenu: ImageView
     private val bookList: MutableList<Book> = mutableListOf() //Lista de libros
     private val filteredList: MutableList<Book> = mutableListOf() // Lista de libros filtrada
 
-
+    //Si se hace click en la flecha se borre toda la pila de actividades
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()  //
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -51,6 +58,7 @@ class HomeActivity : AppCompatActivity() {
         rbAllBooks = findViewById(R.id.rbAllBooks)
         rbReadBooks = findViewById(R.id.rbReadBooks)
         rbUnreadBooks = findViewById(R.id.rbUnreadBooks)
+        closeMenu = findViewById(R.id.more)
         val filterBooksGroup = findViewById<RadioGroup>(R.id.filterBooksGroup)
         val buttonAddBook = findViewById<FloatingActionButton>(R.id.addBtnBooks)
 
@@ -61,11 +69,11 @@ class HomeActivity : AppCompatActivity() {
         val user = auth.currentUser
         if (user != null) { // Si el nombre de usuario existe, lo muestra
             val displayName = user.displayName
-            userName.text = "Hola, $displayName"
+            userName.text = "Biblioteca de $displayName"
             loadBooks(user.uid)
-        } else { //Acá falta hacer que si no está registrado vuelva al inicio de sesión
-            userName.text = "Hola, Usuario"
-            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         // Listener para el RadioGroup (todos, leídos, por leer)
@@ -82,6 +90,7 @@ class HomeActivity : AppCompatActivity() {
         buttonAddBook.setOnClickListener {
             val intent = Intent(this, AddBookActivity::class.java)
             startActivity(intent)
+
         }
 
         // TextWatcher para el buscador
@@ -94,6 +103,9 @@ class HomeActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
+        //Boton de menú para cerrar sesión
+        logAut(closeMenu)
 
     }
 
@@ -174,5 +186,25 @@ class HomeActivity : AppCompatActivity() {
         filteredList.remove(book) // Elimina de la lista que se ve
         bookAdapter.notifyDataSetChanged() // Notificar al adaptador
         Toast.makeText(this, "Libro eliminado", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun logAut(closeMenu: ImageView){
+        closeMenu.setOnClickListener {
+            val popup = PopupMenu(this, it)
+            popup.menuInflater.inflate(R.menu.menu_more, popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.logout -> {
+                        auth.signOut()
+                        // Redirige a la pantalla de inicio de sesión y cierra HomeActivity
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
     }
 }
