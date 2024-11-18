@@ -14,6 +14,7 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.libros.R
@@ -116,7 +117,8 @@ class HomeActivity : AppCompatActivity() {
     // Inicializar el recycler
     private fun initRecycler() {
         recyclerView = findViewById(R.id.recyclerViewBooks)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
 
         // Inicializa el adaptador con la lista filtrada y lo asigna al RecyclerView
         bookAdapter = BookAdapter(filteredList, { book ->

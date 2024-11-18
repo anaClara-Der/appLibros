@@ -45,8 +45,8 @@ class BookAdapter(
 
         Log.i("Esta es la posicion" , "$position")
         holder.title.text = book.title
-        holder.author.text = "Autor: ${book.author}"
-        holder.state.text = "Estado: ${if (book.state) "Leído" else "No leído"}"
+        holder.author.text = " ${book.author}"
+
         holder.deleteButton.setOnClickListener {
             onBookDeleted(book)
         }

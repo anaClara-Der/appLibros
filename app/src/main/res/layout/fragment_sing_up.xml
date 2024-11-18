@@ -51,10 +51,19 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:hint="Contraseña"
-            android:layout_marginBottom="20dp"
             android:minHeight="48dp"
             android:drawableEnd="@drawable/ic_done"
             />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entre 6 y 20 caracteres"
+            android:layout_gravity="start"
+            android:paddingStart="1dp"
+            android:textColor="#757575"
+            android:textSize="12sp"
+            android:layout_marginBottom="20dp"></TextView>
 
 
         <com.google.android.material.button.MaterialButton
@@ -67,9 +76,6 @@
             app:backgroundTint="@color/primary"
             app:cornerRadius="16dp"
             android:layout_marginTop ="30dp"></com.google.android.material.button.MaterialButton>
-
-
-
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

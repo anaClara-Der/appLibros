@@ -7,4 +7,7 @@
     <color name="second">#E0E0E0</color>
     <color name="primary">#B4A2E1</color>
     <color name="brown">#6C4A4A</color>
+    <color name="select">#05A18B</color>
+    <color name="close">#E76669</color>
+
 </resources>
